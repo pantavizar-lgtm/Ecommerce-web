@@ -14,17 +14,13 @@ import NotFound from './pages/NotFound';
 import type { CartItem, Product } from './types/Product';
 
 function App() {
-  // Product state
   const [products, setProducts] = useState<Product[]>([]);
-
-  // Shopping cart state
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // API loading and error states
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Dark mode state
+  // Dark mode
   const [darkMode, setDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem('darkMode');
 
@@ -37,7 +33,7 @@ function App() {
     ).matches;
   });
 
-  // Apply dark/light theme
+  // Apply selected theme
   useEffect(() => {
     document.documentElement.setAttribute(
       'data-theme',
@@ -50,7 +46,7 @@ function App() {
     );
   }, [darkMode]);
 
-  // Fetch products from Fake Store API
+  // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -62,7 +58,9 @@ function App() {
         );
 
         if (!response.ok) {
-          throw new Error('Failed to fetch products.');
+          throw new Error(
+            'Failed to fetch products.'
+          );
         }
 
         const data: Product[] = await response.json();
@@ -89,7 +87,6 @@ function App() {
         (item) => item.id === product.id
       );
 
-      // If product already exists, increase quantity
       if (existingItem) {
         return previousCart.map((item) =>
           item.id === product.id
@@ -101,7 +98,6 @@ function App() {
         );
       }
 
-      // Otherwise add a new item
       return [
         ...previousCart,
         {
@@ -112,8 +108,10 @@ function App() {
     });
   };
 
-  // Remove product completely from cart
-  const handleRemoveFromCart = (productId: number) => {
+  // Remove product from cart
+  const handleRemoveFromCart = (
+    productId: number
+  ) => {
     setCart((previousCart) =>
       previousCart.filter(
         (item) => item.id !== productId
@@ -121,12 +119,11 @@ function App() {
     );
   };
 
-  // Update cart item quantity
+  // Update quantity
   const handleUpdateQuantity = (
     productId: number,
     quantity: number
   ) => {
-    // Remove item if quantity becomes 0
     if (quantity <= 0) {
       handleRemoveFromCart(productId);
       return;
@@ -144,7 +141,7 @@ function App() {
     );
   };
 
-  // Add a new product from the form
+  // Add new product
   const handleAddProduct = (product: Product) => {
     setProducts((previousProducts) => [
       product,
@@ -152,7 +149,7 @@ function App() {
     ]);
   };
 
-  // Calculate total number of products in cart
+  // Calculate cart count
   const cartCount = cart.reduce(
     (total, item) => total + item.quantity,
     0
@@ -169,7 +166,6 @@ function App() {
       />
 
       <Routes>
-        {/* Home / Product List */}
         <Route
           path="/"
           element={
@@ -183,7 +179,6 @@ function App() {
           }
         />
 
-        {/* Product Details */}
         <Route
           path="/product/:id"
           element={
@@ -194,7 +189,6 @@ function App() {
           }
         />
 
-        {/* Shopping Cart */}
         <Route
           path="/cart"
           element={
@@ -206,13 +200,13 @@ function App() {
           }
         />
 
-        {/* Redirect /home to / */}
         <Route
           path="/home"
-          element={<Navigate to="/" replace />}
+          element={
+            <Navigate to="/" replace />
+          }
         />
 
-        {/* 404 Page */}
         <Route
           path="*"
           element={<NotFound />}

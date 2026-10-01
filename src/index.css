@@ -1,3 +1,21 @@
+:root {
+  --app-bg: #f8f9fa;
+  --app-text: #212529;
+  --app-card-bg: #ffffff;
+  --app-border: #dee2e6;
+  --app-muted: #6c757d;
+  --app-input-bg: #ffffff;
+}
+
+[data-theme='dark'] {
+  --app-bg: #121212;
+  --app-text: #f1f1f1;
+  --app-card-bg: #1e1e1e;
+  --app-border: #343a40;
+  --app-muted: #adb5bd;
+  --app-input-bg: #2a2a2a;
+}
+
 body {
   background-color: var(--app-bg);
   color: var(--app-text);
@@ -7,7 +25,9 @@ body {
 }
 
 .product-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   overflow: hidden;
 }
 
@@ -66,45 +86,7 @@ body {
   object-fit: contain;
 }
 
-@media (max-width: 768px) {
-  .product-image-container {
-    height: 220px;
-  }
-
-  .product-details-image-container {
-    min-height: 300px;
-  }
-}
-
-/* =========================
-   Dark Mode
-   ========================= */
-
-:root {
-  --app-bg: #f8f9fa;
-  --app-text: #212529;
-  --app-card-bg: #ffffff;
-  --app-border: #dee2e6;
-  --app-muted: #6c757d;
-  --app-input-bg: #ffffff;
-}
-
-[data-theme='dark'] {
-  --app-bg: #121212;
-  --app-text: #f1f1f1;
-  --app-card-bg: #1e1e1e;
-  --app-border: #343a40;
-  --app-muted: #adb5bd;
-  --app-input-bg: #2a2a2a;
-}
-
-body {
-  background-color: var(--app-bg);
-  color: var(--app-text);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
+/* Dark mode */
 
 [data-theme='dark'] .card {
   background-color: var(--app-card-bg);
@@ -156,15 +138,12 @@ body {
   color: #ffffff;
 }
 
-[data-theme='dark'] .skeleton {
-  background: #343a40;
-}
+@media (max-width: 768px) {
+  .product-image-container {
+    height: 220px;
+  }
 
-[data-theme='dark'] .skeleton::after {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.08),
-    transparent
-  );
+  .product-details-image-container {
+    min-height: 300px;
+  }
 }

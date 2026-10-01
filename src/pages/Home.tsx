@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 
 import ProductForm from '../components/ProductForm';
 import ProductList from '../components/ProductList';
+import ProductSkeletonList from '../components/ProductSkeletonList';
 import SearchBar from '../components/SearchBar';
 
 import type { Product } from '../types/Product';
@@ -46,6 +47,7 @@ function Home({
 
   return (
     <main>
+      {/* Hero Section */}
       <section className="hero-section py-5">
         <div className="container text-center">
           <h1 className="display-5 fw-bold">
@@ -59,8 +61,11 @@ function Home({
       </section>
 
       <div className="container pb-5">
+
+        {/* Add Product Form */}
         <ProductForm onAddProduct={onAddProduct} />
 
+        {/* Search and Sort */}
         <div className="row g-3 mb-4">
           <div className="col-md-8">
             <SearchBar
@@ -86,23 +91,10 @@ function Home({
           </div>
         </div>
 
-        {loading && (
-          <div className="text-center py-5">
-            <div
-              className="spinner-border text-primary"
-              role="status"
-            >
-              <span className="visually-hidden">
-                Loading...
-              </span>
-            </div>
+        {/* Loading Skeleton */}
+        {loading && <ProductSkeletonList />}
 
-            <p className="mt-3 text-muted">
-              Loading products...
-            </p>
-          </div>
-        )}
-
+        {/* Error Message */}
         {error && (
           <div className="alert alert-danger" role="alert">
             <i className="bi bi-exclamation-triangle-fill me-2"></i>
@@ -110,10 +102,13 @@ function Home({
           </div>
         )}
 
+        {/* Actual Products */}
         {!loading && !error && (
           <>
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <h2 className="h3 mb-0">Products</h2>
+              <h2 className="h3 mb-0">
+                Products
+              </h2>
 
               <span className="text-muted">
                 {filteredAndSortedProducts.length} products
