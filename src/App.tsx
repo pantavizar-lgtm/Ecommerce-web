@@ -6,7 +6,6 @@ import {
 } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
-
 import Home from './pages/Home';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
@@ -15,12 +14,43 @@ import NotFound from './pages/NotFound';
 import type { CartItem, Product } from './types/Product';
 
 function App() {
+  // Product state
   const [products, setProducts] = useState<Product[]>([]);
+
+  // Shopping cart state
   const [cart, setCart] = useState<CartItem[]>([]);
 
+  // API loading and error states
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Dark mode state
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('darkMode');
+
+    if (savedTheme !== null) {
+      return savedTheme === 'true';
+    }
+
+    return window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+  });
+
+  // Apply dark/light theme
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      'data-theme',
+      darkMode ? 'dark' : 'light'
+    );
+
+    localStorage.setItem(
+      'darkMode',
+      String(darkMode)
+    );
+  }, [darkMode]);
+
+  // Fetch products from Fake Store API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -52,12 +82,14 @@ function App() {
     fetchProducts();
   }, []);
 
+  // Add product to cart
   const handleAddToCart = (product: Product) => {
     setCart((previousCart) => {
       const existingItem = previousCart.find(
         (item) => item.id === product.id
       );
 
+      // If product already exists, increase quantity
       if (existingItem) {
         return previousCart.map((item) =>
           item.id === product.id
@@ -69,6 +101,7 @@ function App() {
         );
       }
 
+      // Otherwise add a new item
       return [
         ...previousCart,
         {
@@ -79,6 +112,7 @@ function App() {
     });
   };
 
+  // Remove product completely from cart
   const handleRemoveFromCart = (productId: number) => {
     setCart((previousCart) =>
       previousCart.filter(
@@ -87,10 +121,12 @@ function App() {
     );
   };
 
+  // Update cart item quantity
   const handleUpdateQuantity = (
     productId: number,
     quantity: number
   ) => {
+    // Remove item if quantity becomes 0
     if (quantity <= 0) {
       handleRemoveFromCart(productId);
       return;
@@ -108,6 +144,7 @@ function App() {
     );
   };
 
+  // Add a new product from the form
   const handleAddProduct = (product: Product) => {
     setProducts((previousProducts) => [
       product,
@@ -115,6 +152,7 @@ function App() {
     ]);
   };
 
+  // Calculate total number of products in cart
   const cartCount = cart.reduce(
     (total, item) => total + item.quantity,
     0
@@ -122,9 +160,16 @@ function App() {
 
   return (
     <>
-      <Navbar cartCount={cartCount} />
+      <Navbar
+        cartCount={cartCount}
+        darkMode={darkMode}
+        onToggleDarkMode={() =>
+          setDarkMode((previous) => !previous)
+        }
+      />
 
       <Routes>
+        {/* Home / Product List */}
         <Route
           path="/"
           element={
@@ -138,6 +183,7 @@ function App() {
           }
         />
 
+        {/* Product Details */}
         <Route
           path="/product/:id"
           element={
@@ -148,6 +194,7 @@ function App() {
           }
         />
 
+        {/* Shopping Cart */}
         <Route
           path="/cart"
           element={
@@ -159,12 +206,17 @@ function App() {
           }
         />
 
+        {/* Redirect /home to / */}
         <Route
           path="/home"
           element={<Navigate to="/" replace />}
         />
 
-        <Route path="*" element={<NotFound />} />
+        {/* 404 Page */}
+        <Route
+          path="*"
+          element={<NotFound />}
+        />
       </Routes>
     </>
   );

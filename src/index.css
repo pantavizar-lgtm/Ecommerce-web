@@ -1,6 +1,9 @@
 body {
-  background-color: #f8f9fa;
-  color: #212529;
+  background-color: var(--app-bg);
+  color: var(--app-text);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .product-card {
@@ -71,4 +74,97 @@ body {
   .product-details-image-container {
     min-height: 300px;
   }
+}
+
+/* =========================
+   Dark Mode
+   ========================= */
+
+:root {
+  --app-bg: #f8f9fa;
+  --app-text: #212529;
+  --app-card-bg: #ffffff;
+  --app-border: #dee2e6;
+  --app-muted: #6c757d;
+  --app-input-bg: #ffffff;
+}
+
+[data-theme='dark'] {
+  --app-bg: #121212;
+  --app-text: #f1f1f1;
+  --app-card-bg: #1e1e1e;
+  --app-border: #343a40;
+  --app-muted: #adb5bd;
+  --app-input-bg: #2a2a2a;
+}
+
+body {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+[data-theme='dark'] .card {
+  background-color: var(--app-card-bg);
+  color: var(--app-text);
+}
+
+[data-theme='dark'] .text-muted {
+  color: var(--app-muted) !important;
+}
+
+[data-theme='dark'] .form-control,
+[data-theme='dark'] .form-select,
+[data-theme='dark'] .input-group-text {
+  background-color: var(--app-input-bg);
+  color: var(--app-text);
+  border-color: var(--app-border);
+}
+
+[data-theme='dark'] .form-control::placeholder {
+  color: #888;
+}
+
+[data-theme='dark'] .form-control:focus,
+[data-theme='dark'] .form-select:focus {
+  background-color: var(--app-input-bg);
+  color: var(--app-text);
+}
+
+[data-theme='dark'] .hero-section {
+  background: linear-gradient(
+    135deg,
+    #1a2633,
+    #121212
+  );
+}
+
+[data-theme='dark'] .product-image-container,
+[data-theme='dark'] .product-details-image-container {
+  background-color: #ffffff;
+}
+
+[data-theme='dark'] .btn-outline-secondary {
+  color: #f1f1f1;
+  border-color: #6c757d;
+}
+
+[data-theme='dark'] .btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .skeleton {
+  background: #343a40;
+}
+
+[data-theme='dark'] .skeleton::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
 }

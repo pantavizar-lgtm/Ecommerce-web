@@ -2,9 +2,14 @@ import { Link } from 'react-router-dom';
 
 interface NavbarProps {
   cartCount: number;
+  darkMode: boolean;
+  onToggleDarkMode: () => void;
 }
 
-function Navbar({ cartCount }: NavbarProps) {
+function Navbar({ cartCount,
+  darkMode,
+  onToggleDarkMode,
+}: NavbarProps) {
   return (
     <nav className="navbar navbar-expand-lg bg-dark navbar-dark sticky-top">
       <div className="container">
@@ -24,6 +29,26 @@ function Navbar({ cartCount }: NavbarProps) {
 
         <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav ms-auto align-items-lg-center">
+            <li className="nav-item me-lg-2">
+
+              <button
+                className="btn btn-outline-light btn-sm"
+                onClick={onToggleDarkMode}
+                aria-label="Toggle dark mode"
+                title="Toggle dark mode"
+              >
+                <i
+                  className={`bi ${darkMode
+                    ? 'bi-sun-fill'
+                    : 'bi-moon-fill'
+                    }`}
+                ></i>
+
+                <span className="d-lg-none ms-2">
+                  {darkMode ? 'Light Mode' : 'Dark Mode'}
+                </span>
+              </button>
+            </li>
             <li className="nav-item">
               <Link className="nav-link" to="/">
                 Products
