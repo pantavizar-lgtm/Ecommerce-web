@@ -1,32 +1,185 @@
-# React + TypeScript + Vite
+Name : Vizar Panta
+SYMBOL NO: 60395838 
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+# React Assessment - ShopZone
 
-Currently, two official plugins are available:
+A mini e-commerce web application built using React, TypeScript, Bootstrap, and React Router.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Technologies Used
 
-## React Compiler
+* React
+* TypeScript
+* Vite
+* Bootstrap 5
+* Bootstrap Icons
+* React Router DOM
+* Fake Store API
+* React Hooks
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the Oxlint configuration
+### Product Management
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+* Displays products fetched from the Fake Store API
+* Reusable `ProductCard` component
+* Product list rendered using `.map()`
+* TypeScript interfaces for product and cart data
+* Product details page
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### Search and Sorting
+
+* Search products by name
+* Sort products by price:
+
+  * Low to High
+  * High to Low
+
+### Shopping Cart
+
+* Add products to cart
+* Cart count displayed in the navbar
+* Increase or decrease product quantity
+* Remove products from cart
+* Automatically calculates the total price
+* Empty cart state
+
+### Add New Product
+
+* Controlled React form
+* Product name field
+* Price field
+* Image URL field
+* Category selection
+* Form validation
+* Product must have a name
+* Price must be a positive number
+* Image URL must be valid
+* New products are added to the top of the product list without reloading the page
+
+### API Integration
+
+* Product data is fetched using `useEffect`
+* Uses the Fake Store API
+* Loading state
+* Bootstrap loading skeletons
+* Error handling
+
+### Routing
+
+The application uses React Router with the following routes:
+
+| Route          | Description                 |
+| -------------- | --------------------------- |
+| `/`            | Product listing / Home page |
+| `/product/:id` | Product details             |
+| `/cart`        | Shopping cart               |
+| `*`            | 404 Not Found page          |
+
+### UI and UX
+
+* Responsive Bootstrap layout
+* Bootstrap Icons
+* Hover effects on product cards
+* Responsive product grid
+* Loading skeletons using Bootstrap placeholders
+* Dark mode
+* Light/dark theme preference is saved in `localStorage`
+* Automatically uses the system color scheme when no preference is saved
+
+## Project Structure
+
+```text
+react-assessment-yourname/
+├── public/
+├── src/
+│   ├── components/
+│   │   ├── Navbar.tsx
+│   │   ├── ProductCard.tsx
+│   │   ├── ProductList.tsx
+│   │   ├── SearchBar.tsx
+│   │   ├── ProductForm.tsx
+│   │   ├── ProductSkeleton.tsx
+│   │   └── ProductSkeletonList.tsx
+│   │
+│   ├── pages/
+│   │   ├── Home.tsx
+│   │   ├── ProductDetails.tsx
+│   │   ├── Cart.tsx
+│   │   └── NotFound.tsx
+│   │
+│   ├── types/
+│   │   └── Product.ts
+│   │
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+│
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## How to Run
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Start the development server
+
+```bash
+npm run dev
+```
+
+Open the local URL provided by Vite in your browser.
+
+## Build for Production
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+To preview the production build locally:
+
+```bash
+npm run preview
+```
+
+## API
+
+Product data is fetched from the Fake Store API:
+
+```text
+https://fakestoreapi.com/products
+```
+
+## React Hooks Used
+
+The project uses React Hooks for state and side-effect management:
+
+* `useState` - manages products, cart, form data, search, sorting, loading, and dark mode
+* `useEffect` - fetches product data and applies the selected theme
+* `useMemo` - optimizes product filtering and sorting
+
+## Assumptions
+
+* Products added through the form are stored in React state and are not persisted to a backend.
+* Cart data is stored in React state and resets when the page is refreshed.
+* The Fake Store API is used as the mock product API.
+* Product images are expected to be valid publicly accessible URLs.
+* The checkout button is a UI element only and does not process real payments.
+
+## Bonus Features
+
+The project includes the following bonus features:
+
+* Bootstrap loading skeletons
+* Dark mode toggle
+* Dark mode preference persistence using `localStorage`
+* System color scheme detection
+
