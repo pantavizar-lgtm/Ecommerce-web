@@ -1,122 +1,173 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react';
+import {
+  Navigate,
+  Route,
+  Routes,
+} from 'react-router-dom';
+
+import Navbar from './components/Navbar';
+
+import Home from './pages/Home';
+import ProductDetails from './pages/ProductDetails';
+import Cart from './pages/Cart';
+import NotFound from './pages/NotFound';
+
+import type { CartItem, Product } from './types/Product';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [products, setProducts] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError('');
+
+        const response = await fetch(
+          'https://fakestoreapi.com/products'
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch products.');
+        }
+
+        const data: Product[] = await response.json();
+
+        setProducts(data);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Failed to load products.'
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleAddToCart = (product: Product) => {
+    setCart((previousCart) => {
+      const existingItem = previousCart.find(
+        (item) => item.id === product.id
+      );
+
+      if (existingItem) {
+        return previousCart.map((item) =>
+          item.id === product.id
+            ? {
+              ...item,
+              quantity: item.quantity + 1,
+            }
+            : item
+        );
+      }
+
+      return [
+        ...previousCart,
+        {
+          ...product,
+          quantity: 1,
+        },
+      ];
+    });
+  };
+
+  const handleRemoveFromCart = (productId: number) => {
+    setCart((previousCart) =>
+      previousCart.filter(
+        (item) => item.id !== productId
+      )
+    );
+  };
+
+  const handleUpdateQuantity = (
+    productId: number,
+    quantity: number
+  ) => {
+    if (quantity <= 0) {
+      handleRemoveFromCart(productId);
+      return;
+    }
+
+    setCart((previousCart) =>
+      previousCart.map((item) =>
+        item.id === productId
+          ? {
+            ...item,
+            quantity,
+          }
+          : item
+      )
+    );
+  };
+
+  const handleAddProduct = (product: Product) => {
+    setProducts((previousProducts) => [
+      product,
+      ...previousProducts,
+    ]);
+  };
+
+  const cartCount = cart.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      <Navbar cartCount={cartCount} />
 
-      <div className="ticks"></div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              products={products}
+              loading={loading}
+              error={error}
+              onAddToCart={handleAddToCart}
+              onAddProduct={handleAddProduct}
+            />
+          }
+        />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        <Route
+          path="/product/:id"
+          element={
+            <ProductDetails
+              products={products}
+              onAddToCart={handleAddToCart}
+            />
+          }
+        />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+        <Route
+          path="/cart"
+          element={
+            <Cart
+              cart={cart}
+              onRemove={handleRemoveFromCart}
+              onUpdateQuantity={handleUpdateQuantity}
+            />
+          }
+        />
+
+        <Route
+          path="/home"
+          element={<Navigate to="/" replace />}
+        />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
