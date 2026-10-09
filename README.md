@@ -89,7 +89,7 @@ The application uses React Router with the following routes:
 ## Project Structure
 
 ```text
-react-assessment-yourname/
+react-assessment-vizar/
 ├── public/
 ├── src/
 │   ├── components/
